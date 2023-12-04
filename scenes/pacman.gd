@@ -9,28 +9,26 @@ var new_direction: Vector2 = Vector2.LEFT
 var collide: bool = true
 
 func _process(_delta):
+
+	Global.pacman_pos = global_position
+	
 	if $Rays/Ray.is_colliding() == false and $Rays/Ray2.is_colliding() == false:
 		collide = false
 		
 	else:
 		collide = true
-		print("free")
 
 	if collide ==false:
 		direction = new_direction
-	
-	check_collision()
 
 func _physics_process(_delta):
 	
 	velocity = direction * speed
+	pac_rotation()
 	move_and_slide()
 	
-	if velocity.length() > 0:
-		$AnimationPlayer.play("movement")
-	else:
-		$AnimationPlayer.stop()
-
+func pac_rotation():
+	
 	if velocity.y > 0:
 		$SpriteH.rotation_degrees = 90
 	elif velocity.y <0:
@@ -41,6 +39,10 @@ func _physics_process(_delta):
 		$SpriteH.rotation_degrees = 0
 	else:
 		$SpriteH.rotation_degrees = 0
+	if velocity.length() > 0:
+		$AnimationPlayer.play("movement")
+	else:
+		$AnimationPlayer.stop()
 
 	if Input.is_action_pressed("left"):
 		$Rays.rotation_degrees = -180
@@ -58,9 +60,9 @@ func _physics_process(_delta):
 		$Rays.rotation_degrees = 90
 		new_direction = Vector2.DOWN
 
-func check_collision():
-	if collide ==false:
-		print("free")
-	else:
-		print('colide')
+func big_dot():
+	$BigDotT.start()
+	
 
+func _on_big_dot_t_timeout():
+	Global.big_dot_eaten = false

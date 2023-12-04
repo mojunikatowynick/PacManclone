@@ -12,8 +12,12 @@ config_version=5
 
 config/name="PacMan Clone"
 run/main_scene="res://scenes/main_level.tscn"
-config/features=PackedStringArray("4.1", "Mobile")
+config/features=PackedStringArray("4.2", "Mobile")
 config/icon="res://icon.svg"
+
+[autoload]
+
+Global="*res://scenes/Global.gd"
 
 [display]
 
@@ -50,9 +54,12 @@ right={
 [layer_names]
 
 2d_physics/layer_1="pac"
+2d_navigation/layer_1="ghost"
 2d_physics/layer_2="ghost"
 2d_physics/layer_3="wall"
 2d_physics/layer_4="ray"
+2d_physics/layer_5="dots"
+2d_physics/layer_6="area"
 
 [rendering]
 

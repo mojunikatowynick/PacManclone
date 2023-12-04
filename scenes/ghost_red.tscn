@@ -1,0 +1,73 @@
+[gd_scene load_steps=8 format=3 uid="uid://bk8mxjtdj3neu"]
+
+[ext_resource type="Script" path="res://scenes/ghost_red.gd" id="1_ssfts"]
+[ext_resource type="Texture2D" uid="uid://cxh0hymahw8jr" path="res://grafika/g_red1.png" id="2_ybrxr"]
+[ext_resource type="Texture2D" uid="uid://6hfo4vbnpq2" path="res://grafika/g_red2.png" id="3_tk5tq"]
+[ext_resource type="Texture2D" uid="uid://cbs8c7ody0abf" path="res://grafika/gEye.png" id="4_vldub"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_phwsu"]
+radius = 5.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_dbcmr"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_ybrxr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_tk5tq")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_y04n1"]
+radius = 8.0
+
+[node name="ghost_red" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 4
+motion_mode = 1
+wall_min_slide_angle = 0.0
+script = ExtResource("1_ssfts")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_phwsu")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_dbcmr")
+autoplay = "default"
+
+[node name="Eyes" type="Sprite2D" parent="."]
+texture = ExtResource("4_vldub")
+hframes = 4
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_postprocessing = 1
+debug_enabled = true
+
+[node name="Timers" type="Node" parent="."]
+
+[node name="PathTimer" type="Timer" parent="Timers"]
+autostart = true
+
+[node name="StateTimerScatter" type="Timer" parent="Timers"]
+wait_time = 7.0
+one_shot = true
+autostart = true
+
+[node name="StateTimerChase" type="Timer" parent="Timers"]
+wait_time = 20.0
+one_shot = true
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_y04n1")
+
+[connection signal="timeout" from="Timers/PathTimer" to="." method="_on_path_timer_timeout"]
+[connection signal="timeout" from="Timers/StateTimerScatter" to="." method="_on_state_timer_scatter_timeout"]
+[connection signal="timeout" from="Timers/StateTimerChase" to="." method="_on_state_timer_chase_timeout"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
